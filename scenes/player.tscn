@@ -1,23 +1,43 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_script"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_player"]
-albedo_color = Color(0.2, 0.6, 0.9, 1)
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_player"]
-material = SubResource("StandardMaterial3D_player")
+[ext_resource type="PackedScene" path="res://assets/kenney_blocky/Models/GLB format/character-a.glb" id="2_char"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="ParticleProcessMaterial" id="DustMaterial"]
+lifetime_randomness = 0.5
+particle_lifetime = 0.6
+direction = Vector3(0, 1, 0)
+spread = 45.0
+initial_velocity_min = 0.3
+initial_velocity_max = 0.8
+gravity = Vector3(0, -0.5, 0)
+scale_min = 0.03
+scale_max = 0.08
+color = Color(0.7, 0.65, 0.5, 0.6)
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_script")
 
-[node name="Mesh" type="MeshInstance3D" parent="."]
-mesh = SubResource("CapsuleMesh_player")
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_player")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-position = Vector3(0, 2, 4)
+[node name="Character" parent="." instance=ExtResource("2_char")]
+position = Vector3(0, -0.85, 0)
+scale = Vector3(1.8, 1.8, 1.8)
+
+[node name="FootstepDust" type="GPUParticles3D" parent="."]
+position = Vector3(0, 0.05, 0)
+one_shot = true
+emitting = false
+process_material = SubResource("DustMaterial")
+amount = 6
+
+[node name="CameraPivot" type="Node3D" parent="."]
+position = Vector3(0, 1.8, 0)
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot"]
+position = Vector3(0, 0, 4)
